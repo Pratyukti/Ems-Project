@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Button, Box
+  Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, TextField, IconButton, Fab, Box
 } from '@mui/material';
 import { Delete as DeleteIcon, Add as AddIcon } from '@mui/icons-material';
-// import './Training.css';
 
 const Training = () => {
-  const [rows, setRows] = useState([{ empCode: '', empName: '' }]);
+  const [rows, setRows] = useState([{ empCode: '', empName: '', error: false }]);
 
   const handleInputChange = (index, event) => {
     const { name, value } = event.target;
     const updatedRows = [...rows];
     updatedRows[index][name] = value;
 
+    // Check for duplicates
+    if (name === 'empCode') {
+      const isDuplicate = updatedRows.some((row, i) => row.empCode === value && i !== index);
+      updatedRows[index].error = isDuplicate;
+    }
+
     // If user enters 'Others' in empCode, clear empName
     if (name === 'empCode' && value.toLowerCase() === 'others') {
       updatedRows[index]['empCode'] = 'Others';
       updatedRows[index]['empName'] = ''; // Clear empName if 'Others' is entered
-    } else if (name === 'empCode') {
+      updatedRows[index].error = false; // Clear any error if 'Others' is entered
+    } else if (name === 'empCode' && !updatedRows[index].error) {
       const empCode = value;
       // Simulate fetching empName based on empCode (replace with actual logic)
       const empName = getEmployeeName(empCode);
@@ -39,7 +45,7 @@ const Training = () => {
   };
 
   const handleAddRow = () => {
-    setRows([...rows, { empCode: '', empName: '' }]);
+    setRows([...rows, { empCode: '', empName: '', error: false }]);
   };
 
   const handleDeleteRow = (index) => {
@@ -48,8 +54,14 @@ const Training = () => {
   };
 
   return (
-    <Box >
-      <TableContainer component={Paper}>
+    <Box 
+      sx={{ 
+        position: 'relative',  
+      }}
+    >
+      <TableContainer component={Paper} sx={{ border: '1px solid lightgrey', 
+        borderRadius: '8px', 
+        boxShadow:'none'}}>
         <Table>
           <TableHead>
             <TableRow>
@@ -71,6 +83,8 @@ const Training = () => {
                     value={row.empCode}
                     onChange={(event) => handleInputChange(index, event)}
                     fullWidth
+                    error={row.error}
+                    helperText={row.error ? 'Duplicate emp code' : ''}
                   />
                 </TableCell>
                 <TableCell>
@@ -93,15 +107,22 @@ const Training = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Button
-        variant="contained"
+      <Fab
         color="primary"
-        startIcon={<AddIcon />}
+        aria-label="add"
         onClick={handleAddRow}
-        sx={{ marginTop: 2 }}
+        size="small"
+        sx={{ 
+          position: 'absolute', 
+          bottom: -18, 
+          left: '49%', 
+          transform: 'translateX(-50%)', 
+          boxShadow: 'none', 
+          zIndex:1
+        }}
       >
-       <AddIcon/>
-      </Button>
+        <AddIcon />
+      </Fab>
     </Box>
   );
 };

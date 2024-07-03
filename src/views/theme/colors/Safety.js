@@ -1,13 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Training from './Training';
-// import '../theme/colors/Safety.css';
 import {
-  Box, Typography, TextField, RadioGroup, FormControlLabel, Radio, FormControl, Card, CardContent, Divider, Grid
+  Box, Typography, TextField, RadioGroup, FormControlLabel, Radio, FormControl, Card, CardContent, Divider, Grid, Button
 } from '@mui/material';
+import Compression from './Compression';
 
 const Safety = () => {
+  const [selectedDate, setSelectedDate] = useState('');
+
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
+  const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
   return (
-    <Box className="section" sx={{ display: 'flex', justifyContent: 'center', padding: 4 }}>
+    <Box className="section" sx={{ display: 'flex', justifyContent: 'center' }}>
       <Card sx={{ width: '100%', maxWidth: 800, padding: 3, boxShadow: 3 }}>
         <CardContent>
           <Grid container spacing={2} marginBottom={3}>
@@ -19,13 +27,16 @@ const Safety = () => {
                 InputLabelProps={{
                   shrink: true,
                 }}
+                value={selectedDate}
+                onChange={handleDateChange}
+                max={today} // Set max attribute to disable future dates
               />
             </Grid>
             <Grid item xs={12} sm={6}>
-            <TextField
-            label="Reference Number"
-            fullWidth
-          />
+              <TextField
+                label="Reference Number"
+                fullWidth
+              />
             </Grid>
           </Grid>
           <Divider sx={{ marginBottom: 3 }} />
@@ -42,12 +53,18 @@ const Safety = () => {
           </Box>
           <Divider sx={{ marginBottom: 3 }} />
           <Box marginBottom={3}>
-            <Typography variant="h6">Trainer:</Typography>
+            <Typography variant="h6">TRAINER:</Typography>
             <Training />
           </Box>
           <Box marginBottom={3}>
-            <Typography variant="h6">Employee:</Typography>
+            <Typography variant="h6">TRAINEE:</Typography>
             <Training />
+          </Box>
+
+          <Compression marginBottom={3} />
+
+          <Box>
+            <Button variant="contained" color="primary">Submit</Button>
           </Box>
         </CardContent>
       </Card>

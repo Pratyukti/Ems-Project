@@ -18,8 +18,8 @@ import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
 const _nav = [
   {
     component: CNavItem,
-    name: 'Ems',
-    to: '/EMS',
+    name: 'FMS',
+    to: '/FMS',
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',
@@ -45,7 +45,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'New Issuance ',
-    to: '/theme/typography',
+    to: '/views/newIssuance',
     icon: <CIcon icon={cilPencil} customClassName="nav-icon" />,
   },
   {
